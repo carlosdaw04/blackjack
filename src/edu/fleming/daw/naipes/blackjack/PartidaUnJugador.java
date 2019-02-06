@@ -12,7 +12,7 @@ public class PartidaUnJugador {
 	private boolean finalizada = false;
 	
 	public boolean repartir() {
-		if (!finalizada)
+		if (finalizada)
 			System.out.println("No puedo repartir, la partida no ha finalizado.");
 		else {
 			if (crupier.numeroNaipes() > 0)
@@ -26,47 +26,54 @@ public class PartidaUnJugador {
 			finalizada = jugador.getValor() == 21;
 			crupier.add(deck.getNaipe());
 			crupier.add(deck.getNaipe());
-			mostrarMano();
 		}
 		return finalizada;
 	}
 	
 	public boolean pedir() {
-		if (!finalizada)
+		if (finalizada)
 			System.out.println("El jugador no puede pedir, la partida ha finalizado.");
 		else {
 			jugador.add(deck.getNaipe());
 			if (deck.numeroNaipes() < 52)
 				deck.add(descarte);
 			finalizada = jugador.getValor() >= 21;
-			mostrarMano();
 		}
 		return finalizada;
 	}
 	
-	public void plantarse() {
-		finalizada = true;
+	public boolean plantarse() {
 		while (crupier.getValor() < 17)
 			crupier.add(deck.getNaipe());
-		mostrarMano();
+		return finalizada = true;
 	}
 	
-	public void mostrarMano() {
-		System.out.print("Jugador: ");
-		mostrarMano(jugador, false);
-		System.out.println();
-		mostrarMano(crupier, !finalizada);
-		System.out.println();
-		// Falta mostrar quién gana si la partida está finalizada
+	public int getValorCrupier() {
+		return crupier.getValor();
 	}
 	
-	private void mostrarMano(Mano m, boolean ocultar) {
-		Naipe [] naipes = m.get();
-		for (int i=0; i<naipes.length; i++)
-			if (ocultar && i == 0)
-				System.out.print("***");
-			else
-				System.out.print(naipes[i]);
+	public int getValorJugador() {
+		return jugador.getValor();
+	}
+	
+	public boolean isCrupierBlackjack() {
+		return crupier.isBlackjack();
+	}
+	
+	public boolean isJugadorBlackjack() {
+		return jugador.isBlackjack();
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Crupier: ");
+		sb.append(crupier.toString(!finalizada));
+		sb.append(System.getProperty("line.separator"));
+		sb.append("jugador: ");
+		sb.append(jugador.toString(false));
+		sb.append(System.getProperty("line.separator"));
+		return sb.toString();
 	}
 	
 }
